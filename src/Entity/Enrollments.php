@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EnrollmentsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EnrollmentsRepository::class)]
@@ -27,6 +29,14 @@ class Enrollments
 
     #[ORM\ManyToOne(inversedBy: 'enrollments')]
     private ?Courses $courses = null;
+
+    #[ORM\OneToMany(mappedBy: 'enrollments', targetEntity: Progress::class)]
+    private Collection $progresses;
+
+    public function __construct()
+    {
+        $this->progresses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -96,6 +106,36 @@ class Enrollments
     public function setCourses(?Courses $courses): static
     {
         $this->courses = $courses;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Progress>
+     */
+    public function getProgresses(): Collection
+    {
+        return $this->progresses;
+    }
+
+    public function addProgress(Progress $progress): static
+    {
+        if (!$this->progresses->contains($progress)) {
+            $this->progresses->add($progress);
+            $progress->setEnrollments($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProgress(Progress $progress): static
+    {
+        if ($this->progresses->removeElement($progress)) {
+            // set the owning side to null (unless already changed)
+            if ($progress->getEnrollments() === $this) {
+                $progress->setEnrollments(null);
+            }
+        }
 
         return $this;
     }
