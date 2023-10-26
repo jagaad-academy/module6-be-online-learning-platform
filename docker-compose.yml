@@ -13,8 +13,6 @@ services:
       - 'MYSQL_PASSWORD=${MARIADB_DB_USER_PASSWORD}'
     ports:
       - '3306:3306'
-    labels:
-      com.symfony.server.service-prefix: 'DATABASE'
 
   webserver:
     image: 'nginx:alpine'
