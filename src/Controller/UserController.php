@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Users;
 use App\Repository\UsersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +15,11 @@ class UserController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(): Response
     {
+        /** @var Users $user */
         $user = $this->getUser();
         return $this->render('user/index.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'title' => 'Profile of ' . $user->getUsername()
         ]);
     }
 

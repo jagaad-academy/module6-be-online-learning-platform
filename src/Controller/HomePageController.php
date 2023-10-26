@@ -11,6 +11,8 @@ class HomePageController extends AbstractController
     #[Route('/', name: 'app_homepage')]
     public function index(): Response
     {
-        return $this->render('home_page/index.html.twig', []);
+        return $this->render('home_page/index.html.twig', [
+            'title' => 'Jagaad Online Learning Platform'
+        ]);
     }
 }
