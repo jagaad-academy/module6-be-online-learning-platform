@@ -12,7 +12,9 @@ services:
       - 'MYSQL_USER=${MARIADB_DB_USER}'
       - 'MYSQL_PASSWORD=${MARIADB_DB_USER_PASSWORD}'
     ports:
-      - '8003:3306'
+      - '3306:3306'
+    labels:
+      com.symfony.server.service-prefix: 'DATABASE'
 
   webserver:
     image: 'nginx:alpine'
@@ -49,3 +51,10 @@ services:
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=leaning_platform_mariadb
+
+  mailer:
+    container_name: learning_platform_mailer
+    image: schickling/mailcatcher
+    ports:
+      - '1025:1025'
+      - '1080:1080'
