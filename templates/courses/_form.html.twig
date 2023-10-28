@@ -1,4 +1,9 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
+{#    <ul class="tags">#}
+{#        {% for instructor in form.instructor_list %}#}
+{#            <li>{{ form_row(instructor.username) }}</li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
     <button class="btn btn-success">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

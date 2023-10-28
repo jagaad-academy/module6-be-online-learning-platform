@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Courses;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,12 +13,15 @@ class CoursesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('instructorId')
             ->add('title')
             ->add('description')
-            ->add('createdAt')
-            ->add('updatedAt')
-            ->add('instructors')
+            ->add('hours')
+            ->add('minutes')
+            ->add('instructorId')
+//            ->add('instructor_list', CollectionType::class, [
+//                'entry_type' => InstructorsType::class,
+//                'mapped' => false
+//            ])
         ;
     }
 
