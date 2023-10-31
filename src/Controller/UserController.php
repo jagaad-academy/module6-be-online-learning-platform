@@ -11,18 +11,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
-    #[Route('/profile', name: 'app_profile')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function index(): Response
-    {
-        /** @var Users $user */
-        $user = $this->getUser();
-        return $this->render('user/index.html.twig', [
-            'user' => $user,
-            'title' => 'Profile of ' . $user->getUsername()
-        ]);
-    }
-
     #[Route('/users/all', name: 'app_all_users')]
     #[IsGranted('ROLE_INSTRUCTOR')]
     public function users(UsersRepository $usersRepository): Response

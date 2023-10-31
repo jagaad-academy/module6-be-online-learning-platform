@@ -42,11 +42,14 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: "updated_at", nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'instructors', targetEntity: Courses::class)]
+    #[ORM\OneToMany(mappedBy: 'instructor', targetEntity: Courses::class)]
     private Collection $courses;
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Enrollments::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Enrollments::class)]
     private Collection $enrollments;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Profile $profile = null;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -160,7 +163,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->courses->contains($course)) {
             $this->courses->add($course);
-            $course->setInstructors($this);
+            $course->setInstructor($this);
         }
 
         return $this;
@@ -170,8 +173,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->courses->removeElement($course)) {
             // set the owning side to null (unless already changed)
-            if ($course->getInstructors() === $this) {
-                $course->setInstructors(null);
+            if ($course->getInstructor() === $this) {
+                $course->setInstructor(null);
             }
         }
 
@@ -190,7 +193,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->enrollments->contains($enrollment)) {
             $this->enrollments->add($enrollment);
-            $enrollment->setUsers($this);
+            $enrollment->setUser($this);
         }
 
         return $this;
@@ -200,8 +203,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->enrollments->removeElement($enrollment)) {
             // set the owning side to null (unless already changed)
-            if ($enrollment->getUsers() === $this) {
-                $enrollment->setUsers(null);
+            if ($enrollment->getUser() === $this) {
+                $enrollment->setUser(null);
             }
         }
 
@@ -226,6 +229,23 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(Profile $profile): static
+    {
+        // set the owning side of the relation if necessary
+        if ($profile->getUser() !== $this) {
+            $profile->setUser($this);
+        }
+
+        $this->profile = $profile;
 
         return $this;
     }

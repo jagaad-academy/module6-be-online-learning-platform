@@ -4,41 +4,12 @@
 
 {% block body %}
     <div class="container">
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>CourseId</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-{#                <th>Course</th>#}
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
+        <div class="row g-4 justify-content-center mt-5">
             {% for lesson in lessons %}
-                <tr>
-                    <td>{{ lesson.id }}</td>
-                    <td>{{ lesson.courseId }}</td>
-                    <td>{{ lesson.title }}</td>
-                    <td>{{ lesson.content }}</td>
-                    <td>{{ lesson.createdAt ? lesson.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ lesson.updatedAt ? lesson.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-{#                    <td><a href="{{ path('app_courses_show', {'id': lesson.courses.id}) }}">{{ lesson.courses.title }}</a></td>#}
-                    <td>
-                        <a href="{{ path('app_lessons_show', {'id': lesson.id}) }}">show</a>
-                        <a href="{{ path('app_lessons_edit', {'id': lesson.id}) }}">edit</a>
-                    </td>
-                </tr>
+                {{ include('shared/_lesson_snippet.html.twig', {lesson: lesson, label: "Show", completed: false}) }}
             {% else %}
-                <tr>
-                    <td colspan="7">no records found</td>
-                </tr>
+                <div class="col-12"><h5>No lessons found</h5></div>
             {% endfor %}
-            </tbody>
-        </table>
+        </div>
     </div>
 {% endblock %}

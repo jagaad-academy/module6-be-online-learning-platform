@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Lessons;
+use App\Entity\Progress;
 use App\Form\LessonsType;
+use App\Repository\EnrollmentsRepository;
 use App\Repository\LessonsRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +28,7 @@ class LessonsController extends AbstractController
         ]);
     }
 
-    #[Route('/new/course/{id}', name: 'app_lessons_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_lessons_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_INSTRUCTOR')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -34,7 +37,6 @@ class LessonsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $lesson->setCourseId($request->get('id'));
             $entityManager->persist($lesson);
             $entityManager->flush();
 
@@ -54,7 +56,7 @@ class LessonsController extends AbstractController
     {
         return $this->render('lessons/show.html.twig', [
             'lesson' => $lesson,
-            'title' => 'Information about lesson ' . $lesson->getId()
+            'title' => 'Information about lesson <br>"' . $lesson->getTitle() . '"'
         ]);
     }
 
@@ -74,7 +76,7 @@ class LessonsController extends AbstractController
         return $this->render('lessons/edit.html.twig', [
             'lesson' => $lesson,
             'form' => $form,
-            'title' => 'Edit lesson ' . $lesson->getId()
+            'title' => 'Edit lesson <br>' . $lesson->getId()
         ]);
     }
 
@@ -88,5 +90,22 @@ class LessonsController extends AbstractController
         }
 
         return $this->redirectToRoute('app_lessons_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/complete', name: 'app_lessons_complete', methods: ['GET'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function complete(Lessons $lesson, EnrollmentsRepository $enrollmentsRepository, EntityManagerInterface $entityManager): Response
+    {
+        $enrollment = $enrollmentsRepository->findOneBy(['course' => $lesson->getCourse(), 'user' => $this->getUser()]);
+        $progress = new Progress();
+        $progress->setLessons($lesson);
+        $progress->setStatus(1);
+        $progress->setLastAccessed(new \DateTimeImmutable());
+        $progress->setEnrollment($enrollment);
+
+        $entityManager->persist($progress);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_courses_show', ['id' => $lesson->getCourse()->getId()]);
     }
 }

@@ -42,6 +42,11 @@
 
 {% block body %}{% endblock %}
 
+{% if app.request.attributes.get('_route') == 'app_homepage' %}
+    {{ include('shared/_services.html.twig') }}
+    {{ include('shared/_popular_courses.html.twig') }}
+{% endif %}
+
 {{ include('shared/_footer.html.twig') }}
 
 <!-- Back to Top -->

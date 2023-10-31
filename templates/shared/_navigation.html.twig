@@ -13,8 +13,12 @@
             <a href="{{ path('app_courses_index') }}" class="nav-item nav-link">Courses</a>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <a href="{{ path('app_logout') }}" class="nav-item nav-link">Logout</a>
+                <a href="{{ path('app_profile') }}" class="nav-item nav-link"><i class="fa fa-user-tie me-2"></i>{{ app.user.username }}</a>
             {% else %}
                 <a href="{{ path('app_login') }}" class="nav-item nav-link">Login</a>
+            {% endif %}
+            {% if is_granted("ROLE_ADMIN") %}
+                <a href="{{ path('admin') }}" class="nav-item nav-link">Admin panel</a>
             {% endif %}
 {#            <div class="nav-item dropdown">#}
 {#                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>#}

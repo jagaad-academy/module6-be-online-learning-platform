@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello {{ user.username }}!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% if user.profile %}
+            <div class="row g-4">
+                <div class="col-4 offset-4 text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item bg-light">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{{ asset('/uploads/profile/') ~ image_path  }}" alt="">
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">{{ user.username }}</h5>
+                            <p>{{ user.profile.country ? user.profile.country : '' }}</p>
+                            <p>{{ user.profile.address ?  user.profile.address : ''}}</p>
+                            <p>{{ user.profile.dateOfBirth ? user.profile.dateOfBirth|date('d.m.Y') : '' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-end">
+                    <a href="{{ path('app_profile_edit', {id: user.profile.id}) }}" class="btn btn-primary">Edit profile</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-12 text-end">
+                    <a href="{{ path('app_profile_new') }}" class="btn btn-primary">Create profile</a>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

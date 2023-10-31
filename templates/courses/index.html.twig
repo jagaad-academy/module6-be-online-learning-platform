@@ -4,40 +4,48 @@
 
 {% block body %}
     <div class="container">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>InstructorId</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-            </thead>
-            <tbody>
+        <div class="row g-4 justify-content-center">
             {% for course in courses %}
-                <tr>
-                    <td>{{ course.id }}</td>
-                    <td>{{ course.instructorId }}</td>
-                    <td>{{ course.title }}</td>
-                    <td>{{ course.description }}</td>
-                    <td>{{ course.createdAt ? course.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ course.updatedAt ? course.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>
-                        <a href="{{ path('app_courses_show', {'id': course.id}) }}">show</a>
-                        <a href="{{ path('app_courses_edit', {'id': course.id}) }}">edit</a>
-                    </td>
-                </tr>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                <div class="course-item bg-light">
+                    <div class="position-relative overflow-hidden">
+                        <img class="img-fluid" src="{{ asset('img/course-1.jpg') }}" alt="">
+                        <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
+                            <a href="{{ path('app_courses_show', {'id': course.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Read More</a>
+                            {% if not is_granted('ROLE_INSTRUCTOR') %}
+                                {% set found = false %}
+                                {% for enrollment in course.enrollments %}
+                                    {% if user.id == enrollment.user.id %}
+                                        {% set found = true %}
+                                        <a href="{{ path('app_courses_show', {'id': course.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Resume</a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not found %}
+                                    <a href="{{ path('app_courses_enroll', {'id': course.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Join Now</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ path('app_courses_edit', {'id': course.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Edit</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="text-center p-4 pb-0">
+                        <h5 class="mb-4">{{ course.title }}</h5>
+                    </div>
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>{{ course.instructor.username }}</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>{{ course.hours }}:{{ course.minutes }} Hrs</small>
+                        <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>{{ course.createdAt ? course.createdAt|date('d.m.Y') : '' }}</small>
+                    </div>
+                </div>
+            </div>
             {% else %}
-                <tr>
-                    <td colspan="7">no records found</td>
-                </tr>
+                <div class="col-12"><h5>No records found</h5></div>
             {% endfor %}
-            </tbody>
-        </table>
-        <a class="mt-3 btn btn-primary" href="{{ path('app_courses_new') }}">Create new</a>
+        </div>
+
+        {% if is_granted('ROLE_INSTRUCTOR') %}
+            <a class="mt-3 btn btn-primary" href="{{ path('app_courses_new') }}">Create new</a>
+        {% endif %}
     </div>
 
 {% endblock %}

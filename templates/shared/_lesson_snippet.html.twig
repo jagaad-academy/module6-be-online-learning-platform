@@ -1,0 +1,27 @@
+<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+    <div class="course-item bg-light">
+        <div class="position-relative overflow-hidden">
+            <img class="img-fluid" src="{{ asset('img/course-3.jpg') }}" alt="">
+            {% if is_granted('ROLE_INSTRUCTOR') %}
+                <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
+                    <a href="{{ path('app_lessons_show', {'id': lesson.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Show</a>
+                    <a href="{{ path('app_lessons_edit', {'id': lesson.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Edit</a>
+                </div>
+            {% else %}
+                <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
+                    <a href="{{ path('app_lessons_show', {'id': lesson.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 30px;">{{ label }}</a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="text-center p-4 pb-3">
+            <h5 class="mb-4">{{ lesson.title }}</h5>
+            {% for enrollement in app.user.enrollments %}
+                {% for progress in enrollement.progresses %}
+                    {% if progress.status == 1 and lesson.id == progress.lessons.id %}
+                        <h6 class="text-danger mt-n3">COMPLETED</h6>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

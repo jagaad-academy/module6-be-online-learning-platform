@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Courses;
+use App\Entity\Users;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,11 +19,10 @@ class CoursesType extends AbstractType
             ->add('description')
             ->add('hours')
             ->add('minutes')
-            ->add('instructorId')
-//            ->add('instructor_list', CollectionType::class, [
-//                'entry_type' => InstructorsType::class,
-//                'mapped' => false
-//            ])
+            ->add('instructor', EntityType::class, [
+                'class' => Users::class,
+                'choice_label' => 'username'
+            ])
         ;
     }
 
