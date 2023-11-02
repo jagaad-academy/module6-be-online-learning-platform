@@ -99,6 +99,7 @@
         "codeception/module-phpbrowser": "^3.0",
         "codeception/module-symfony": "^3.1",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "phpspec/prophecy": "^1.17",
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "*",
         "symfony/browser-kit": "6.3.*",

@@ -35,7 +35,6 @@ class RegistrationCest
         $I->fillField('registration_form[plainPassword]', '123456');
         $I->checkOption('Agree terms');
         $I->click('Register');
-        $I->amOnPage('/login');
         $I->see('Login');
     }
 }
