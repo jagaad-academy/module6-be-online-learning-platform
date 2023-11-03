@@ -1,6 +1,9 @@
-name: "Continuous Integration Module6"
+name: "Online learning platform"
 
 on:
+  push:
+    branches:
+      - "main"
   pull_request:
     branches:
       - "main"
